@@ -1,0 +1,730 @@
+/* sabatiniartstudio — site styles
+   Every class is prefixed `sas-`. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* ---------- Tokens ---------- */
+
+.sas-site {
+  --sas-black: #000;
+  --sas-white: #fff;
+  --sas-grey: #8a8a8a;
+  --sas-red: #e10600;
+
+  --sas-serif-display: "Bodoni Moda", "Didot", "Bodoni 72", "Times New Roman", serif;
+  --sas-serif-text: "EB Garamond", "Garamond", "Times New Roman", serif;
+
+  --sas-menu-w: 160px;          /* space kept clear for the fixed menu */
+  --sas-pad-y: 90px;            /* fixed top and bottom padding of every section */
+  --sas-pad-r: 4vw;
+
+  --sas-title-size: clamp(40px, min(4.6vw, 8vh), 72px);
+  --sas-body-size: clamp(17px, 1.3vw, 20px);
+  --sas-text-scale: 1.4;        /* Bepixel, About and The Break text, relative to the artwork text */
+  --sas-text-indent: 50px;      /* text blocks sit this far in from the artwork edge */
+
+  background: var(--sas-black);
+  color: var(--sas-white);
+  color-scheme: dark;
+  font-family: var(--sas-serif-text);
+  font-size: var(--sas-body-size);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.sas-site a {
+  color: inherit;
+}
+
+/* ---------- Light ground (Signs, Lucia, Invictus, About) ----------
+   Sections with sas-light sit on #ECE4E1 with inverted text colours. The colour tokens are
+   redefined here, so every rule that uses them inverts inside these sections and nothing on
+   the black sections changes. The step from black is a hard cut at the section edge. */
+
+.sas-light,
+.sas-menu.is-on-light:not(.is-open) {
+  --sas-light-ground: #ece4e1;
+  --sas-light-ink: #111111;
+  --sas-light-grey: #666666;    /* 4.6:1 on the ground, WCAG AA for body text */
+  --sas-light-frame: transparent; /* artwork frame: transparent, or rgba(17, 17, 17, 0.3) */
+
+  --sas-white: var(--sas-light-ink);
+  --sas-grey: var(--sas-light-grey);
+}
+
+.sas-light {
+  background: var(--sas-light-ground);
+  color: var(--sas-light-ink);
+  color-scheme: light;
+}
+
+.sas-light .sas-art__figure {
+  border-color: var(--sas-light-frame);
+  background-clip: padding-box;  /* keep the placeholder fill out of the frame */
+}
+
+/* ---------- Shared pieces ---------- */
+
+.sas-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sas-pad-y) var(--sas-pad-r) var(--sas-pad-y) var(--sas-menu-w);
+}
+
+.sas-mark {
+  display: block;
+  flex: none;
+}
+
+.sas-title {
+  margin: 0;
+  font-family: var(--sas-serif-display);
+  font-size: var(--sas-title-size);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 20;
+}
+
+.sas-body {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--sas-serif-text);
+  font-size: var(--sas-body-size);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.sas-body + .sas-body {
+  margin-top: 1.2em;
+}
+
+/* ---------- Menu ---------- */
+
+.sas-menu {
+  position: fixed;
+  z-index: 50;
+  top: 10vh;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+.sas-menu.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0s;
+}
+
+.sas-menu__toggle {
+  display: none;
+}
+
+.sas-menu__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sas-menu__item {
+  margin: 0;
+  padding: 0;
+}
+
+.sas-menu__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 16px 4px 0;
+  color: var(--sas-grey);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.sas-site .sas-menu__link {
+  color: var(--sas-grey);
+  text-decoration: none;
+}
+
+.sas-menu__rule {
+  display: block;
+  flex: none;
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.sas-menu__label {
+  font-family: var(--sas-serif-display);
+  font-size: 18px;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  font-variation-settings: "opsz" 11;
+  white-space: nowrap;
+}
+
+.sas-site .sas-menu__link:hover,
+.sas-site .sas-menu__link:focus-visible {
+  color: var(--sas-white);
+}
+
+.sas-site .sas-menu__link.is-active {
+  color: var(--sas-white);
+}
+
+/* The menu inverts over the light ground (is-on-light, set in js/site.js). is-instant is on
+   only for the frame of the switch, so it is a hard cut like the section edge. */
+.sas-site .sas-menu.is-instant .sas-menu__link,
+.sas-site .sas-menu.is-instant .sas-menu__rule,
+.sas-site .sas-menu.is-instant .sas-menu__toggle {
+  transition: none;
+}
+
+.sas-menu__link.is-active .sas-menu__rule {
+  width: 44px;
+}
+
+.sas-menu__link:focus-visible,
+.sas-menu__toggle:focus-visible,
+.sas-hero__arrow:focus-visible {
+  outline: 1px solid var(--sas-grey);
+  outline-offset: 4px;
+}
+
+/* ---------- 1. Home ---------- */
+
+.sas-hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  flex-direction: column;
+  padding-left: var(--sas-pad-r);
+  text-align: center;
+}
+
+.sas-hero__mark {
+  width: clamp(88px, 16vh, 150px);
+  height: clamp(88px, 16vh, 150px);
+  margin-bottom: 7.5vh;
+}
+
+.sas-hero__lines {
+  margin: 0;
+  font-family: var(--sas-serif-display);
+  font-size: clamp(22px, min(2.4vw, 3.9vh), 36px);
+  line-height: 1.45;
+  font-variation-settings: "opsz" 16;
+  text-wrap: balance;
+}
+
+.sas-hero__name {
+  margin: 19vh 0 0;
+  font-family: var(--sas-serif-display);
+  font-size: clamp(18px, min(1.8vw, 3vh), 27px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--sas-grey);
+  font-variation-settings: "opsz" 14;
+}
+
+.sas-hero__city {
+  font: inherit;
+}
+
+.sas-site .sas-hero__arrow {
+  position: absolute;
+  bottom: 4.5vh;
+  left: 50%;
+  display: block;
+  width: 44px;
+  height: 32px;
+  margin-left: -22px;
+  padding: 8px 7px;
+  color: var(--sas-grey);
+  transition: color 0.3s ease;
+}
+
+.sas-site .sas-hero__arrow:hover {
+  color: var(--sas-white);
+}
+
+.sas-hero__arrow svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Artwork screens (2, 4, 6) ---------- */
+
+.sas-art {
+  justify-content: flex-start;
+  gap: 4.5vw;
+}
+
+.sas-art__figure {
+  flex: none;
+  align-self: flex-start;       /* when the text is taller, keep the image at the top so the gap above it stays the same */
+  width: min(80vh, 50vw);
+  aspect-ratio: 1 / 1;
+  margin: 0;
+  border: 1px solid var(--sas-white);
+  background: #111;
+}
+
+.sas-art__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sas-art__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 34em;
+  container-type: inline-size;
+}
+
+/* 14cqi keeps a long title on one line in a narrow text column */
+.sas-art__title {
+  font-size: min(clamp(40px, min(4.2vw, 8vh), 68px), 14cqi);
+}
+
+.sas-art__collection {
+  margin: 0.15em 0 0;
+  font-family: var(--sas-serif-display);
+  font-size: clamp(20px, min(1.8vw, 3.2vh), 28px);
+  line-height: 1.2;
+  color: var(--sas-grey);
+  font-variation-settings: "opsz" 14;
+}
+
+.sas-art__body {
+  margin-top: 2em;
+}
+
+.sas-art .sas-edition {
+  margin-top: 2em;
+}
+
+.sas-edition {
+  margin: 0;
+  font-family: var(--sas-serif-text);
+  font-size: var(--sas-body-size);
+  line-height: 1.4;
+  color: var(--sas-grey);
+}
+
+.sas-edition__year,
+.sas-edition__line {
+  display: block;
+}
+
+.sas-edition__year {
+  margin-bottom: 0.4em;
+}
+
+.sas-credit {
+  margin: 1.4em 0 0;
+  max-width: 60ch;
+  font-family: var(--sas-serif-text);
+  font-size: calc(var(--sas-body-size) * 0.72);
+  line-height: 1.5;
+  color: var(--sas-grey);
+}
+
+/* On Lucia and Invictus the credit line takes the short text's place and spacing */
+.sas-art .sas-art__collection + .sas-credit {
+  margin-top: calc(var(--sas-body-size) * 2);
+}
+
+/* ---------- Text screens (3, 6, 9) ---------- */
+
+.sas-text {
+  justify-content: flex-start;
+  padding-right: var(--sas-pad-r);
+  padding-left: calc(var(--sas-menu-w) + var(--sas-text-indent));
+}
+
+.sas-text__column {
+  --sas-text-title: calc(var(--sas-title-size) * var(--sas-text-scale));
+  width: 100%;
+  max-width: 75ch;              /* ch of the enlarged body size, set here */
+  font-size: calc(var(--sas-body-size) * var(--sas-text-scale));
+  line-height: 1.65;
+}
+
+/* The mark keeps its proportion to the title */
+.sas-text__mark {
+  width: calc(var(--sas-text-title) * 1.36);
+  height: calc(var(--sas-text-title) * 1.36);
+  margin-bottom: calc(var(--sas-text-title) * 0.95);
+}
+
+/* The Signs intro has no mark but keeps its place, so the title sits where Bepixel's does */
+.sas-signs .sas-text__column {
+  padding-top: calc(var(--sas-text-title) * (1.36 + 0.95));
+}
+
+.sas-text__title + .sas-body {
+  margin-top: 0;
+}
+
+.sas-text .sas-body {
+  max-width: none;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.sas-text .sas-body + .sas-body {
+  margin-top: 1.6em;
+}
+
+.sas-text .sas-text__contact {
+  margin-top: 3.2em;
+}
+
+.sas-site .sas-text__link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  overflow-wrap: anywhere;      /* the Instagram address can wrap on a narrow phone */
+}
+
+.sas-site .sas-text__link:hover,
+.sas-site .sas-text__link:focus-visible {
+  color: var(--sas-grey);
+}
+
+.sas-text__title {
+  margin-bottom: 0.6em;
+  font-size: var(--sas-text-title);
+}
+
+/* ---------- 5. The Break ---------- */
+
+.sas-break {
+  flex-direction: column;
+  align-items: flex-start;      /* text, label and hands all share the Bepixel and About left edge */
+  padding-left: calc(var(--sas-menu-w) + var(--sas-text-indent));
+}
+
+.sas-break__intro {
+  align-self: stretch;
+}
+
+.sas-break__body {
+  max-width: 75ch;
+  font-size: calc(var(--sas-body-size) * var(--sas-text-scale));
+  line-height: 1.65;
+}
+
+.sas-break__body + .sas-break__body {
+  margin-top: 1.6em;            /* same gap as between the About paragraphs */
+}
+
+.sas-break__inner {
+  width: 100%;
+  max-width: min(1200px, calc((100vh - 470px) * 4 + 120px));
+  min-width: min(100%, 720px);
+}
+
+.sas-break__title {
+  margin-bottom: 0.55em;
+}
+
+.sas-break__stop {
+  color: var(--sas-red);
+}
+
+.sas-break__label {
+  margin: 5.3em 0 0.7em;        /* about twice the visible gap it had at 2.4em */
+  font-family: var(--sas-serif-text);
+  font-size: var(--sas-body-size);
+  line-height: 1.3;
+  color: var(--sas-grey);
+}
+
+.sas-break__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sas-break__item {
+  margin: 0;
+  padding: 0;
+}
+
+.sas-break__figure {
+  margin: 0;
+}
+
+.sas-break__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: #111;
+}
+
+.sas-break__caption {
+  margin-top: 0.6em;
+  font-family: var(--sas-serif-text);
+  font-size: var(--sas-body-size);
+  line-height: 1.3;
+  color: var(--sas-grey);
+  text-align: left;
+}
+
+/* ---------- End of the page ----------
+   Text breaks in the lowest 30% of the window (BAND in js/pixelate.js). The last section
+   gets enough space below it for its last line to scroll up into the sharp band. */
+
+.sas-site .sas-section--last {
+  padding-bottom: 35vh;
+}
+
+/* ---------- Scroll pixelation (js/pixelate.js) ----------
+   A canvas sits over each artwork image and each text element; the marks are handled
+   inside their own SVG. A canvas only shows while something is outside the centre band;
+   the rest of the time the original element shows. */
+
+.sas-pixelate-host {
+  position: relative;
+}
+
+.sas-pixelate-canvas {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.sas-pixelate-canvas.is-active {
+  visibility: visible;
+}
+
+/* The canvas draws the 1px frame itself while it shows, so the frame breaks with the image */
+.sas-site .sas-pixelate-frame-hidden {
+  border-color: transparent;
+}
+
+/* Text: one canvas per text element, transparent except over lines that are breaking */
+.sas-pixelate-text {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+/* ---------- Stacked artwork screens ----------
+   Side by side, the text column is 100vw − menu − image (up to 50vw) − gap − margin,
+   which falls below about 320px under 1160px wide. From there, image on top, text below. */
+
+@media (max-width: 1159px) {
+  .sas-art {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 36px;
+  }
+
+  .sas-art__figure {
+    width: min(100%, 80vh);
+  }
+
+  .sas-art__text {
+    max-width: 34em;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 899px) {
+  .sas-site {
+    --sas-menu-w: 20px;
+    --sas-pad-y: 60px;
+    --sas-pad-r: 20px;
+    --sas-title-size: clamp(34px, 10vw, 48px);
+    --sas-body-size: 17px;
+    --sas-text-scale: 1;
+    --sas-text-indent: 0px;
+  }
+
+  .sas-section {
+    padding: var(--sas-pad-y) 20px;
+  }
+
+  /* Menu: small fixed button that opens a full-screen list */
+
+  .sas-menu {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    transform: none;
+  }
+
+  .sas-site .sas-menu__toggle {
+    position: fixed;
+    z-index: 2;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 8px;
+    border: 0;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.72);
+    color: var(--sas-white);
+    font-family: var(--sas-serif-display);
+    font-size: 16px;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .sas-site .sas-menu.is-on-light:not(.is-open) .sas-menu__toggle {
+    background: rgba(236, 228, 225, 0.72);
+  }
+
+  .sas-menu__toggle .sas-menu__rule {
+    width: 20px;
+  }
+
+  .sas-menu__list {
+    position: fixed;
+    z-index: 1;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 120px 24px 48px 0;   /* first item sits below the CLOSE line */
+    overflow-y: auto;
+    background: var(--sas-black);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+
+  .sas-menu.is-open .sas-menu__list {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s;
+  }
+
+  .sas-menu__link {
+    gap: 16px;
+    padding: 8px 16px 8px 0;
+  }
+
+  .sas-menu__rule {
+    width: 32px;
+  }
+
+  .sas-menu__link.is-active .sas-menu__rule {
+    width: 52px;
+  }
+
+  .sas-menu__label {
+    font-size: 24px;
+  }
+
+  /* Home */
+
+  .sas-hero {
+    padding-top: 64px;
+    padding-bottom: 96px;
+  }
+
+  .sas-hero__mark {
+    width: 104px;
+    height: 104px;
+    margin-bottom: 48px;
+  }
+
+  .sas-hero__lines {
+    font-size: clamp(21px, 6.2vw, 28px);
+  }
+
+  .sas-hero__name {
+    margin-top: 12vh;
+    font-size: 19px;
+  }
+
+  /* Artwork screens */
+
+  .sas-art__collection {
+    font-size: 22px;
+  }
+
+  .sas-credit {
+    font-size: 14px;
+  }
+
+  /* Text screens */
+
+  .sas-text {
+    padding-right: 20px;
+  }
+
+  .sas-text__mark {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 40px;
+  }
+
+  .sas-signs .sas-text__column {
+    padding-top: 104px;           /* the mark's 64px and its 40px gap */
+  }
+
+  /* The Break: two rows of two */
+
+  .sas-break__inner {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .sas-break__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+
+  .sas-break__caption {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sas-menu,
+  .sas-menu__list,
+  .sas-menu__link,
+  .sas-menu__rule {
+    transition: none;
+  }
+}
