@@ -347,9 +347,9 @@ body {
   color: var(--sas-grey);
 }
 
-/* On Lucia and Invictus the credit line takes the short text's place and spacing */
-.sas-art .sas-art__collection + .sas-credit {
-  margin-top: calc(var(--sas-body-size) * 2);
+/* On Lucia and Invictus the credit line follows the edition block, two edition lines below it */
+.sas-art .sas-edition + .sas-credit {
+  margin-top: calc(var(--sas-body-size) * 1.4 * 2);
 }
 
 /* ---------- Text screens (3, 6, 9) ---------- */
@@ -373,11 +373,6 @@ body {
   width: calc(var(--sas-text-title) * 1.36);
   height: calc(var(--sas-text-title) * 1.36);
   margin-bottom: calc(var(--sas-text-title) * 0.95);
-}
-
-/* The Signs intro has no mark but keeps its place, so the title sits where Bepixel's does */
-.sas-signs .sas-text__column {
-  padding-top: calc(var(--sas-text-title) * (1.36 + 0.95));
 }
 
 .sas-text__title + .sas-body {
@@ -697,10 +692,6 @@ body {
     width: 64px;
     height: 64px;
     margin-bottom: 40px;
-  }
-
-  .sas-signs .sas-text__column {
-    padding-top: 104px;           /* the mark's 64px and its 40px gap */
   }
 
   /* The Break: two rows of two */
